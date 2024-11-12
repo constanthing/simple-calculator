@@ -23,7 +23,7 @@ function addHistory() {
     history.insertBefore(item, history.children[0])
 }
 
-function display() {
+function updateDisplay() {
     let string = "";
     const bufferLength = buffer.length;
 
@@ -45,11 +45,15 @@ function display() {
     }
 }
 
+function convertProperly() {
+    type
+}
+
 function performCalculation() {
     // ??? what if its a double????
     // converting strings to integers 
-    buffer[0] = parseInt(buffer[0]);
-    buffer[1] = parseInt(buffer[1]);
+    buffer[0] = Number(buffer[0]);
+    buffer[1] = Number(buffer[1]);
 
     switch (symbol) {
         case "+":
@@ -65,6 +69,10 @@ function performCalculation() {
             result = buffer[0] * buffer[1];
             break;
         default: break;
+    }
+
+    if (!Number.isInteger(result)) {
+        result = parseFloat(result.toFixed(2))
     }
 
     // updating current number to be the number
@@ -90,47 +98,73 @@ numbers.forEach((nmb) => {
             number += nmb.innerText;
         }
 
-        display()
+        updateDisplay()
     })
 })
 
 symbols.forEach((sym) => {
     sym.addEventListener("click", ()=>{
+        // symbol clicked
+
+        // clear clicked
         if (sym.innerText == "C") {
             buffer.length = 0;
             number = null;
             symbol = null;
-            display()
+            updateDisplay()
             return;
         }
-        // symbol clicked
 
-        if (number != null && symbol == null) {
-            // if number is not empty then add it to the buffer
+        // since by default number is null 
+        // when they press the symbol
+        // it pushes number to the buffer
+        // so we have to make it 0 instead of having null pushed
+        if (number == null && buffer.length == 0) {
+            number = 0;
             pushToBuffer()
         }
 
+        // pushing number to buffer
+        if (number != null && symbol == null) {
+            pushToBuffer()
+        }
 
+        // number ready to be pushed into buffer
+        // buffer has a number already
+        // perform operation on buffer number and queued number
         if (number != null && symbol != null) {
             performOperation()
         }
 
+        // symbol not being null means a number is in the buffer
+        // and number is null 
+        // so replace current sybmol with new one
         if (number == null && sym != null) {
-            // replace current symbol
             symbol = sym.innerText
         }
 
         // assign clicked symbol to variable symbol
         symbol = sym.innerText;
 
-        display()
+        updateDisplay()
     })
+})
+
+document.querySelector("#inverse").addEventListener("click", ()=>{
+    if (number != null) {
+        if (number.charAt(0) == "-") {
+            number = number.replace("-", "")
+        } else {
+            number = "-" + number
+        }
+    }
+    updateDisplay()
 })
 
 document.querySelector("#equal").addEventListener("click", ()=>{
     if (symbol != null && number != null) {
         // perform operation
         performOperation()
-        display()
+        updateDisplay()
     }
 })
