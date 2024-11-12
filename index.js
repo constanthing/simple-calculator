@@ -158,7 +158,11 @@ document.querySelector("#inverse").addEventListener("click", ()=>{
 
 document.querySelector("#root").addEventListener("click", ()=>{
     if (number != null) {
-        number = Math.sqrt(Number(number)) + "";
+        number = Math.sqrt(Number(number));
+        if (!Number(number).isInteger) {
+            number = number.toFixed(2);
+        }
+        number += "";
         updateDisplay()
     }
 })
