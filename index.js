@@ -45,13 +45,8 @@ function updateDisplay() {
     }
 }
 
-function convertProperly() {
-    type
-}
-
 function performCalculation() {
-    // ??? what if its a double????
-    // converting strings to integers 
+    // converting strings to their numbers format 
     buffer[0] = Number(buffer[0]);
     buffer[1] = Number(buffer[1]);
 
@@ -159,6 +154,13 @@ document.querySelector("#inverse").addEventListener("click", ()=>{
         }
     }
     updateDisplay()
+})
+
+document.querySelector("#root").addEventListener("click", ()=>{
+    if (number != null) {
+        number = Math.sqrt(Number(number)) + "";
+        updateDisplay()
+    }
 })
 
 document.querySelector("#equal").addEventListener("click", ()=>{
