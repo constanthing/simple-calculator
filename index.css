@@ -1,0 +1,56 @@
+html, body {
+    background: black;
+    color: white;
+    margin: 0;
+}
+
+main {
+    width: 16%;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+}
+#output {
+    width: 100%;
+    padding: .5em;
+    text-align: right;
+    background: gray;
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin: .2em 0;
+}
+.col {
+    width: 20%;
+    margin: 0 .2em;
+    padding: 1em 0;
+}
+.row .col:first-child {
+    margin-left: 0;
+}
+.row .col:last-child {
+    margin-right: 0;
+}
+
+ul, li, h5 {
+    margin: 0;
+}
+#history {
+    margin-top: 1em;
+}
+#history-list {
+    margin-top: .5em;
+}
+#history-list li {
+    font-size: .8em;
+}
+
+
+#equal {
+    padding: 1em 0;
+    width: 100%;
+}
