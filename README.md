@@ -5,5 +5,4 @@
 2. Click a symbol
 = Undefined display error
 ### TODO
-- Finish root symbol implementation
 - Add keyboard click detection

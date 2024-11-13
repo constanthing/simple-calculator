@@ -24,9 +24,6 @@ function addHistory() {
 }
 
 function updateDisplay() {
-    let string = "";
-    const bufferLength = buffer.length;
-
     if (symbol == null) {
         // if sym null then no number has been pushed to buffer yet
         // so only check number
@@ -165,6 +162,20 @@ document.querySelector("#root").addEventListener("click", ()=>{
         number += "";
         updateDisplay()
     }
+})
+
+document.querySelector("#dot").addEventListener("click", ()=>{
+    if (number == null) {
+        number = "0.";
+    } else {
+        if (number.includes(".")) {
+            // do nothing
+        } else {
+            number += ".";
+        }
+    } 
+
+    updateDisplay()
 })
 
 document.querySelector("#equal").addEventListener("click", ()=>{
