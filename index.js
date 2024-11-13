@@ -60,7 +60,12 @@ function performCalculation() {
         case "*":
             result = buffer[0] * buffer[1];
             break;
-        default: break;
+        case "%":
+            result = buffer[0] % buffer[1];
+            break;
+        default:
+            result = 0;
+            break;
     }
 
     if (!Number.isInteger(result)) {
@@ -81,64 +86,72 @@ function performOperation() {
     pushToBuffer()
 }
 
+function numberClicked(nmb) {
+    if (number == null) {
+        number = `${nmb}`;
+    } else {
+        number += nmb;
+    }
+
+    updateDisplay()
+}
+
 numbers.forEach((nmb) => {
     // number pressed
     nmb.addEventListener("click", ()=>{
-        if (number == null) {
-            number = `${nmb.innerText}`;
-        } else {
-            number += nmb.innerText;
-        }
-
-        updateDisplay()
+        numberClicked(nmb.innerText)
     })
 })
 
+function symbolClicked(sym) {
+    // symbol clicked
+
+    // clear clicked
+    if (sym == "C") {
+        buffer.length = 0;
+        number = null;
+        symbol = null;
+        updateDisplay()
+        return;
+    }
+
+    // since by default number is null 
+    // when they press the symbol
+    // it pushes number to the buffer
+    // so we have to make it 0 instead of having null pushed
+    if (number == null && buffer.length == 0) {
+        number = 0;
+        pushToBuffer()
+    }
+
+    // pushing number to buffer
+    if (number != null && symbol == null) {
+        pushToBuffer()
+    }
+
+    // number ready to be pushed into buffer
+    // buffer has a number already
+    // perform operation on buffer number and queued number
+    if (number != null && symbol != null) {
+        performOperation()
+    }
+
+    // symbol not being null means a number is in the buffer
+    // and number is null 
+    // so replace current sybmol with new one
+    if (number == null && sym != null) {
+        symbol = sym;
+    }
+
+    // assign clicked symbol to variable symbol
+    symbol = sym;
+
+    updateDisplay()
+}
+
 symbols.forEach((sym) => {
     sym.addEventListener("click", ()=>{
-        // symbol clicked
-
-        // clear clicked
-        if (sym.innerText == "C") {
-            buffer.length = 0;
-            number = null;
-            symbol = null;
-            updateDisplay()
-            return;
-        }
-
-        // since by default number is null 
-        // when they press the symbol
-        // it pushes number to the buffer
-        // so we have to make it 0 instead of having null pushed
-        if (number == null && buffer.length == 0) {
-            number = 0;
-            pushToBuffer()
-        }
-
-        // pushing number to buffer
-        if (number != null && symbol == null) {
-            pushToBuffer()
-        }
-
-        // number ready to be pushed into buffer
-        // buffer has a number already
-        // perform operation on buffer number and queued number
-        if (number != null && symbol != null) {
-            performOperation()
-        }
-
-        // symbol not being null means a number is in the buffer
-        // and number is null 
-        // so replace current sybmol with new one
-        if (number == null && sym != null) {
-            symbol = sym.innerText
-        }
-
-        // assign clicked symbol to variable symbol
-        symbol = sym.innerText;
-
-        updateDisplay()
+        symbolClicked(sym.innerText)
     })
 })
 
@@ -153,7 +166,7 @@ document.querySelector("#inverse").addEventListener("click", ()=>{
     updateDisplay()
 })
 
-document.querySelector("#root").addEventListener("click", ()=>{
+function rootClicked() {
     if (number != null) {
         number = Math.sqrt(Number(number));
         if (!Number(number).isInteger) {
@@ -162,9 +175,13 @@ document.querySelector("#root").addEventListener("click", ()=>{
         number += "";
         updateDisplay()
     }
+}
+document.querySelector("#root").addEventListener("click", ()=>{
+    rootClicked()
 })
 
-document.querySelector("#dot").addEventListener("click", ()=>{
+
+function dotClicked() {
     if (number == null) {
         number = "0.";
     } else {
@@ -176,12 +193,46 @@ document.querySelector("#dot").addEventListener("click", ()=>{
     } 
 
     updateDisplay()
+}
+document.querySelector("#dot").addEventListener("click", ()=>{
+    dotClicked()
 })
 
-document.querySelector("#equal").addEventListener("click", ()=>{
+function equalClicked() {
     if (symbol != null && number != null) {
         // perform operation
         performOperation()
         updateDisplay()
+    }
+}
+document.querySelector("#equal").addEventListener("click", ()=>{
+    equalClicked()
+})
+
+// sets are faster than array.includes(n) --- O(1) vs O(n)
+const symbs = new Set(['*', '/', '%', '-', '+', 'C']);
+const nmbs = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']);
+
+window.addEventListener("keydown", (e)=>{
+    // check for key value number instead of string ? maybe 
+    switch (e.key) {
+        case "Enter":
+            equalClicked()
+            return;
+        case ".":
+            dotClicked()
+            return;
+        case "r": case "R":
+            rootClicked()
+            return;
+    }
+
+    if (nmbs.has(e.key)) {
+        numberClicked(e.key)
+        return;
+    }
+
+    if (symbs.has(e.key)) {
+        symbolClicked(e.key)
     }
 })
